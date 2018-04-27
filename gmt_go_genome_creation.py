@@ -74,6 +74,5 @@ print(len(dic_go_genes))
 
 df_go = pa.DataFrame.from_dict(dic_go_genes, orient='index')
 df_go.insert(0, 'Description', 'GO_terms')
-df_go = df_go[df_go[0].str.startswith('Pldbra') == True]
 
 df_go.to_csv('go_gene.gmt', sep='\t', header=False)
