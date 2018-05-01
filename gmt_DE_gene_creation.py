@@ -1,3 +1,4 @@
+import argparse
 import os
 import pandas as pa
 import re
@@ -14,7 +15,12 @@ all the column name, you have just to look at all these name sand isolated
 the name of the gene column.
 """
 
-isolating_word = 'diff'
+
+parser = argparse.ArgumentParser(prog = "gmt_DE_gene_creation.py")
+parser.add_argument("-i", "--iw", dest = "isolating_word", metavar = "FILE", help = "Isolating word for DE genes", required = True)
+args = parser.parse_args()
+
+isolating_word = args.isolating_word
 
 file_names = []
 for file_name in os.listdir():

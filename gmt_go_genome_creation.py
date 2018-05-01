@@ -1,3 +1,4 @@
+import argparse
 import numpy as np
 import pandas as pa
 import pronto
@@ -17,6 +18,12 @@ The alternative ID is to avoid missing GO terms because they have multiple IDs.
 You have to set manually the namespace that you are looking at.
 
 """
+parser = argparse.ArgumentParser(prog = "gmt_go_genome_creation.py")
+parser.add_argument("-a", "--annot", dest = "annot_file", metavar = "FILE", help = "TSV Annotation file.", required = True)
+args = parser.parse_args()
+
+annotation_file = args.annot_file
+
 namespace = 'molecular_function'
 
 go_ontology = pronto.Ontology('http://purl.obolibrary.org/obo/go/go-basic.obo')
@@ -34,7 +41,7 @@ for go_term in go_ontology:
             go_alt_ids[go_alt] = go_term.id
 
 # Genome file with genes associated with GO terms.
-df = pa.read_csv('genome_file_completed.tsv', sep='\t')
+df = pa.read_csv(annotation_file, sep='\t')
 df.replace(np.nan, '', inplace=True)
 
 gos_in_df = []
