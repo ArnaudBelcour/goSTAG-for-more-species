@@ -40,11 +40,11 @@ source("https://bioconductor.org/biocLite.R")
 biocLite("goSTAG")
 library(goSTAG)
 library(biomaRt)
-gos <- loadGeneLists( "test/test_data/example_go_terms.gmt" )
-genes <- loadGeneLists("test/test_data/example_DE_gene.gmt" )
+gos <- loadGeneLists( "test_data/example_go_terms.gmt" )
+genes <- loadGeneLists("test_data/example_DE_gene.gmt" )
 
 # Add all gene ID in "ALL"
-query <- read.csv(file="test/test_data/example_gene_go_query.tsv", header=TRUE, sep="\t")
+query <- read.csv(file="test_data/example_gene_go_query.tsv", header=TRUE, sep="\t")
 query = query[ query[,1]!="", ]
 query = query[ query[,2]!="", ]
 
