@@ -25,16 +25,16 @@ def genes_file_creation(input_folder):
     all the column name, you have just to look at all these name sand isolated
     the name of the gene column.
     """
-    file_names = []
+    file_paths = {}
     for file_name in os.listdir(input_folder):
-        file_names.append(file_name)
+        file_paths[file_name] = input_folder + '/' + file_name
 
     df = pa.DataFrame()
             
-    for file_name in file_names:
-        df_temp = pa.read_csv(file_name, sep='\t')
+    for file_name in file_paths:
+        df_temp = pa.read_csv(file_paths[file_name], sep='\t', header=None)
         print(df_temp.columns)
-        gene_column = 'Unnamed: 0'
+        gene_column = 0
         df_temp = df_temp[[gene_column]]
         df_temp.columns = ['Gene_Name_DE']
         row = []
@@ -77,7 +77,8 @@ def gos_files_creation(annotation_file):
                 go_alt_ids[go_alt] = go_term.id
 
     # Genome file with genes associated with GO terms.
-    df = pa.read_csv(annotation_file, sep='\t')
+    df = pa.read_csv(annotation_file, sep='\t', header=None)
+    df.columns = ['Gene_Name', 'GOs']
     df.replace(np.nan, '', inplace=True)
 
     gos_in_df = []
@@ -123,7 +124,8 @@ def gos_files_creation(annotation_file):
     df.reset_index(inplace=True)
     df_query_go = pa.concat([pa.Series(row['Gene_Name'], row['GOs'].split(','))
                         for _, row in df.iterrows()]).reset_index()
-    df_query_go.columns = [['GOs', 'Gene_Name']]
+    df_query_go.columns = ['GOs', 'Gene_Name']
+    df_query_go = df_query_go[['Gene_Name', 'GOs']]
     df_query_go.to_csv('query_go.tsv', sep='\t', index=False)
 
 def main(args):
@@ -131,3 +133,6 @@ def main(args):
     annotation_file = args.annot_file
     genes_file_creation(input_folder)
     gos_files_creation(annotation_file)
+
+if __name__ == '__main__':
+    main(args)

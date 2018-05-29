@@ -40,6 +40,7 @@ source("https://bioconductor.org/biocLite.R")
 biocLite("goSTAG")
 library(goSTAG)
 library(biomaRt)
+library(GO.db)
 gos <- loadGeneLists( "test_data/example_go_terms.gmt" )
 genes <- loadGeneLists("test_data/example_DE_gene.gmt" )
 
