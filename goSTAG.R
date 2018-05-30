@@ -27,17 +27,16 @@ go_ids = unique(query[,2])
 domains = Ontology(GOTERM)
 
 go_ids = unique(query[,2])
-go_ids_filtered = go_ids[domains[names(go_ids)]==toupper('MF') ]
+go_ids_filtered = go_ids[domains[names(go_ids)]== toupper('MF') ]
 go_ids_filtered = go_ids_filtered[ ! is.na(go_ids_filtered) ]
-query_filtered = query[ query[,2] %in% go_ids_filtered, ]
+query_filtered = query[ query[,2] %in% levels(go_ids_filtered), ]
 
 ## Get the list of gene annotations for each GO term
-go_genes = lapply( go_ids_filtered, function(x) unique(query_filtered[query_filtered[,2]==x,1]) )
+go_genes = lapply( go_ids_filtered, function(x) unique(query_filtered[query_filtered[,2]==x,1]))
 names(go_genes) = go_ids_filtered
 
 ## Add full list of all annotated genes
 gos[[ "ALL" ]] = unique(query[,1])
-gos[["ALL"]] <- unique(rapply(gos, function(x) head(x,Inf)))
 
 enrichment_matrix <- performGOEnrichment( genes, gos)
 hclust_results <- performHierarchicalClustering( enrichment_matrix, distance_method = "euclidean", clustering_method = "complete" )

@@ -57,7 +57,7 @@ domains = Ontology(GOTERM)
 go_ids = unique(query[,2])
 go_ids_filtered = go_ids[domains[names(go_ids)]==toupper('BP') ]
 go_ids_filtered = go_ids_filtered[ ! is.na(go_ids_filtered) ]
-query_filtered = query[ query[,2] %in% go_ids_filtered, ]
+query_filtered = query[ query[,2] %in% levels(go_ids_filtered), ]
 
 ## Get the list of gene annotations for each GO term
 go_genes = lapply( go_ids_filtered, function(x) unique(query_filtered[query_filtered[,2]==x,1]) )
