@@ -38,8 +38,8 @@ names(go_genes) = go_ids_filtered
 ## Add full list of all annotated genes
 gos[[ "ALL" ]] = unique(query[,1])
 
-enrichment_matrix <- performGOEnrichment( genes, gos)
-hclust_results <- performHierarchicalClustering( enrichment_matrix, distance_method = "euclidean", clustering_method = "complete" )
+enrichment_matrix <- performGOEnrichment( genes, gos, filter_method = "p.adjust", significance_threshold = 0.3, p.adjust_method = "BH" )
+hclust_results <- performHierarchicalClustering( enrichment_matrix, distance_method = "euclidian" )
 clusters <- groupClusters( hclust_results)
 cluster_labels <- annotateClusters( clusters )
 
