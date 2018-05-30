@@ -11,6 +11,7 @@ from tqdm import *
 parser = argparse.ArgumentParser(prog = "gmt_DE_gene_creation.py")
 parser.add_argument("-a", "--annot", dest = "annot_file", metavar = "FILE", help = "TSV Annotation file.", required = True)
 parser.add_argument("-f", "--folder", dest = "input_folder", metavar = "FILE", help = "Folder containing De genes files.", required = True)
+parser.add_argument("-g", "--go", dest = "go_namespace_studied", metavar = "STRING", help = "GO namespace for the analysis: molecular_function, biological_process.", required = True)
 args = parser.parse_args()
 
 def genes_file_creation(input_folder):
@@ -47,7 +48,7 @@ def genes_file_creation(input_folder):
 
     df.to_csv('DE_gene.gmt', sep='\t', index=False, header=False)
 
-def gos_files_creation(annotation_file):
+def gos_files_creation(annotation_file, go_namespace_studied):
     """
     This script creates a gmt file (tab-separated value file), containing each GO term
     associated with all the genes that are annotated by this GO term.
@@ -60,8 +61,6 @@ def gos_files_creation(annotation_file):
     You have to set manually the namespace that you are looking at.
 
     """
-    namespace = 'molecular_function'
-
     go_ontology = pronto.Ontology('http://purl.obolibrary.org/obo/go/go-basic.obo')
 
     # For each GO terms look to the namespaces associated with them.
@@ -100,7 +99,7 @@ def gos_files_creation(annotation_file):
         for gene_go in gene_gos:
             if go != '' and go not in go_namespaces:
                 go = go_alt_ids[go]
-            if gene_go[0] == go and go != '' and go_namespaces[go] == namespace:
+            if gene_go[0] == go and go != '' and go_namespaces[go] == go_namespace_studied:
                 genes.append(gene_go[1])
         if go != '':
             dic_go_genes[go] = genes
@@ -131,8 +130,9 @@ def gos_files_creation(annotation_file):
 def main(args):
     input_folder = args.input_folder
     annotation_file = args.annot_file
+    go_namespace_studied = args.go_namespace_studied
     genes_file_creation(input_folder)
-    gos_files_creation(annotation_file)
+    gos_files_creation(annotation_file, go_namespace_studied)
 
 if __name__ == '__main__':
     main(args)
